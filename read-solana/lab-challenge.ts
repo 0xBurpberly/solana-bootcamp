@@ -8,8 +8,8 @@ const LOG_FILE_PATH = "error-log.txt"; // Define the log file path
 // Function to log messages to a file
 function logError(message: string) {
     const timestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
-    const formmattedMessage = '[${timestamp}] ${message}\n';
-    appendFileSync(LOG_FILE_PATH, formmattedMessage);
+    const formattedMessage = `[${timestamp}] ${message}\n`;
+    appendFileSync(LOG_FILE_PATH, formattedMessage);
 }
 
 (async () => {
