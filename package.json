@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "@solana-developers/helpers": "^2.5.2",
     "@solana/web3.js": "^1.95.3",
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "esrun": "^3.2.26",
+    "typescript": "^5.5.4"
   }
 }
