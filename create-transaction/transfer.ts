@@ -30,7 +30,8 @@ console.log(`✅ Loaded our own keypair, the destination public key, and connect
 
 const transaction = new Transaction();
 
-const LAMPORTS_TO_SEND = 5000;
+// Changed lamports to send to make the transfer and fee distinct in explorer
+const LAMPORTS_TO_SEND = 5000000;
 
 const sendSolInstruction = SystemProgram.transfer({
     fromPubkey: senderKeypair.publicKey,
@@ -40,10 +41,31 @@ const sendSolInstruction = SystemProgram.transfer({
 
 transaction.add(sendSolInstruction);
 
-const signature = await sendAndConfirmTransaction(connection, transaction, [
-    senderKeypair,
-]);
+async function sendTransactionWithTiming() {
+    const startTime = Date.now(); // Record the start time
 
-console.log(`💸 Finished! Sent ${LAMPORTS_TO_SEND} to the address ${toPubkey}. `,);
+    try {
+        const signature = await sendAndConfirmTransaction(connection, transaction, [
+            senderKeypair,
+        ]);
 
-console.log(`Transaction signature is ${signature}!`);
+        const endTime = Date.now(); // Record the end time
+        const timeTaken = (endTime - startTime) / 1000; // Calculate the time taken in seconds
+
+        console.log(`💸 Finished! Sent ${LAMPORTS_TO_SEND} to the address ${toPubkey}. `,);
+        console.log(`Transaction signature is ${signature}!`);
+        console.log(`⏱ Time taken for transaction: ${timeTaken} seconds`);
+
+        // Check the transaction status
+        const status = await connection.getSignatureStatus(signature);
+        if (status?.value?.confirmationStatus) {
+            console.log(`🔍 Transaction confirmation status: ${status.value.confirmationStatus}`);
+        } else {
+            console.log('🔍 Unable to retrieve confirmation status.')
+        }
+    } catch (error) {
+        console.error("❌ Transaction failed:", error);
+    }
+}
+
+sendTransactionWithTiming();
